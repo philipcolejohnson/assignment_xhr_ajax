@@ -17,7 +17,21 @@
 var $ = {
 
   ajax: function(options) {
-    
+    var complete = options.complete || function() { }
+    var data = options.data || {}
+    var error = options.error || function() { }
+    var headers = options.hearders || function() { }
+
   }
-  
+
 };
+
+
+// complete (function) What arguments should this take?
+// data (object)
+// error (function) What arguments should this take?
+// headers (object)
+// method (string) Note: type is an alias for this
+// success (function) What arguments should this take?
+// url (string)
+// async (boolean)
