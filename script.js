@@ -17,15 +17,47 @@
 var $ = {
 
   ajax: function(options) {
-    var complete = options.complete || function() { }
-    var data = options.data || {}
-    var error = options.error || function() { }
-    var headers = options.hearders || function() { }
+    var request = {}
+    var request.complete = options.complete || function() { };
+    var request.data = options.data || {};
+    var request.dataType = options.dataType || "json"
+    var request.error = options.error || function() { };
+    var request.headers = options.headers || function() { };
+    var request.method = options.method || "GET";
+    var request.success = options.success || function() {};
+    var request.url = options.url ;
+    var request.async = options.async || true;
 
+    var xhr = new XMLHttpRequest();
+
+    this.errorListener(xhr, xhrequest)
+    this.successListener(xhr, request)
+
+
+
+    xhr.open(options.method, options.url, options.async);
+    xhr.send();
+
+    return
+
+  },
+
+   errorListener: function(xhr, requestOptions) {
+      xhr.addEventListener( "error", function(){
+        return requestOptions.error(xhr, xhr.status, xhr.statusText);
+    });
+  },
+
+  successListener: function(xhr, requestOptions) {
+      xhr.addEventListener( "error", function(){
+        return requestOptions.success(JSON.parse(xhr.data), xhr.status, xhr.statusText);
+    });
   }
-
 };
 
+$.ajax({
+
+});
 
 // complete (function) What arguments should this take?
 // data (object)
