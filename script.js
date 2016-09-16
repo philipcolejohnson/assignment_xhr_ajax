@@ -15,7 +15,9 @@
 // xhr.send("title=Foo&body=Bar&userId=1");
 
 var $ = {
-  ajax: function(options) {
 
+  ajax: function(options) {
+    
   }
+  
 };
