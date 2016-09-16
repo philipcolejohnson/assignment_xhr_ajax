@@ -18,13 +18,13 @@ var $ = {
 
   ajax: function(options) {
     var request = {};
-    request.complete = options.complete || function(xhr, status) { console.log(status) };
+    request.complete = options.complete || function(xhr, status) { console.log(status); };
     request.data = options.data || {};
     request.dataType = options.dataType || "json";
-    request.error = options.error || function(a, b, c) { console.log(c) };
+    request.error = options.error || function(a, b, c) { console.log(c); };
     request.headers = options.headers || function() { };
     request.method = options.method || "GET";
-    request.success = options.success || function(a, b, c) { console.log(b) };
+    request.success = options.success || function(a, b, c) { console.log(b); };
     request.url = options.url ;
     request.async = options.async || true;
 
@@ -38,7 +38,21 @@ var $ = {
     xhr.open(request.method, request.url, request.async);
     xhr.send();
 
-    return xhr.promise();
+    var xhrPromise = new Promise(function(resolve, reject) {
+      xhr.addEventListener( "load", function(){
+        if (xhr.readyState === 4) {
+
+          if (xhr.status >= 200 && xhr.status < 400) {
+            resolve(xhr.response);
+          } else {
+            reject(xhr.status);
+          }
+
+        }
+      });
+    });
+
+    return xhrPromise;
 
   },
 
@@ -52,7 +66,7 @@ var $ = {
       xhr.addEventListener( "load", function(){
         if (xhr.readyState === 4) {
 
-          if (xhr.status === 200) {
+          if (xhr.status >= 200 && xhr.status < 400) {
             requestOptions.success(xhr.response, xhr.statusText, xhr);
           } else {
             requestOptions.error(xhr, xhr.status, xhr.statusText);
