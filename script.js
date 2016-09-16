@@ -18,13 +18,13 @@ var $ = {
 
   ajax: function(options) {
     var request = {};
-    request.complete = options.complete || function() { };
+    request.complete = options.complete || function(xhr, status) { console.log(status) };
     request.data = options.data || {};
     request.dataType = options.dataType || "json";
-    request.error = options.error || function() { };
+    request.error = options.error || function(a, b, c) { console.log(c) };
     request.headers = options.headers || function() { };
     request.method = options.method || "GET";
-    request.success = options.success || function() {};
+    request.success = options.success || function(a, b, c) { console.log(b) };
     request.url = options.url ;
     request.async = options.async || true;
 
@@ -38,7 +38,7 @@ var $ = {
     xhr.open(request.method, request.url, request.async);
     xhr.send();
 
-    return xhr;
+    return xhr.promise();
 
   },
 
@@ -53,7 +53,7 @@ var $ = {
         if (xhr.readyState === 4) {
 
           if (xhr.status === 200) {
-            requestOptions.success(xhr.data, xhr.statusText, xhr);
+            requestOptions.success(xhr.response, xhr.statusText, xhr);
           } else {
             requestOptions.error(xhr, xhr.status, xhr.statusText);
           }
@@ -62,6 +62,29 @@ var $ = {
 
         }
     });
+  },
+
+  get: function(url, data, success, dataType) {
+    var request = {};
+    request.data = data || {};
+    request.dataType = dataType || "json";
+    request.success = success || function() {};
+    request.url = url;
+
+    return this.ajax(request);
+
+  },
+
+  post: function(url, data, success, dataType) {
+    var request = {};
+    request.data = data || {};
+    request.dataType = dataType || "json";
+    request.success = success || function() {};
+    request.url = url;
+    request.method = "POST";
+
+    return this.ajax(request);
+
   }
 };
 
@@ -69,12 +92,12 @@ var $ = {
 
 // });
 
-a = $.ajax({
-  complete: function() { console.log("complete" ); },
-  success: function(data, status) { console.log(status); },
-  error: function() { console.log("error" ); },
-  url: "http://reqres.in/api/users"
-});
+a = $.post(
+  // complete: function() { console.log("complete" ); },
+  // success: function(data, status) { console.log(data); },
+  // error: function() { console.log("error" ); },
+  "http://reqres.in/api/users"
+);
 
 // complete (function) What arguments should this take?
 // data (object)
